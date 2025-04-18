@@ -11,16 +11,18 @@ impl Logger for StderrLogger {
     }
 }
 
+type FilterFunc = fn(u8, &str) -> bool;
+
 struct Filter {
     logger: StderrLogger,
-    filter_func: Box<dyn Fn(u8, &str) -> bool>,
+    filter_func: FilterFunc,
 }
 
 impl Filter {
-    fn new(log: StderrLogger, filter_func: impl Fn(u8, &str) -> bool + 'static) -> Self {
+    fn new(log: StderrLogger, filter_func: FilterFunc) -> Self {
         Self {
             logger: log,
-            filter_func: Box::new(filter_func),
+            filter_func: filter_func,
         }
     }
 }
